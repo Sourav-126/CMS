@@ -13,7 +13,7 @@ export default function Landing() {
     <main className="w-full">
       <section className="flex justify-center h-[50vh] sm:h-[60vh] md:h-[70vh]">
         <div className="flex flex-col justify-center items-center gap-5 text-center">
-          <div className="">
+          <div className="flex flex-col gap-3">
             <h1 className="text-3xl tracking-tighter font-bold  sm:text-4xl md:text-5xl lg:text-5xl">
               Manage your Content with Ease
             </h1>
