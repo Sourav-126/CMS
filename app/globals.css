@@ -120,3 +120,27 @@
     @apply bg-background text-foreground;
   }
 }
+
+.ql-snow {
+  border: transparent !important;
+}
+
+.ql-editor {
+  min-height: 200px;
+  min-width: 500px;
+  overflow-y: auto;
+  background-color: rgb(39, 39, 42);
+}
+.ql-toolbar {
+  background-color: gray;
+  border-radius: 4px;
+}
+
+.ql-editor > p {
+  font-size: 1rem;
+}
+
+.ql-syntax {
+  background-color: rgb(83, 83, 83);
+  font-family: monospace;
+}

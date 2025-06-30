@@ -75,7 +75,7 @@ model Post {
   thumbnail String?
   desc      String? //description
   keywords  String?
-  excrept   String?
+  excerpt   String?
   authorId  String
   catSlug   String
   author    User       @relation(fields: [authorId], references: [id])

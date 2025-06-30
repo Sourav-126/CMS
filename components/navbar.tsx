@@ -36,6 +36,7 @@ const UserModalComponent = ({ user }: { user: User }) => {
       <DropdownMenuTrigger>
         <Image
           className="rounded-full border-2 border-[greenyellow]"
+          alt="userImage"
           src={user.image}
           width={40}
           height={40}

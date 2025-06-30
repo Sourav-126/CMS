@@ -1,26 +1,26 @@
 import { url } from "inspector";
 import Image from "next/image";
 import Link from "next/link";
-const BlogConfig = [
-  {
-    title: "ReactJS vs NextJS",
-    excrept: "NEXT JS is the ultimate development framework ....",
-    location: "/photo1.png",
-    url: "/demo-slug",
-  },
-  {
-    title: "SSR vs SEO",
-    excrept: "Need to think about that",
-    location: "/photo2.png",
-    url: "/demo-slug",
-  },
-  {
-    title: "How to Become a Good Backend Dev",
-    excrept: "Make your Logic thinking and Problem solving Hard and fast ",
-    location: "/photo1.png",
-    url: "/demo-slug",
-  },
-];
+// const BlogConfig = [
+//   {
+//     title: "ReactJS vs NextJS",
+//     excerpt: "NEXT JS is the ultimate development framework ....",
+//     location: "/photo1.png",
+//     url: "/demo-slug",
+//   },
+//   {
+//     title: "SSR vs SEO",
+//     excerpt: "Need to think about that",
+//     location: "/photo2.png",
+//     url: "/demo-slug",
+//   },
+//   {
+//     title: "How to Become a Good Backend Dev",
+//     excerpt: "Make your Logic thinking and Problem solving Hard and fast ",
+//     location: "/photo1.png",
+//     url: "/demo-slug",
+//   },
+// ];
 
 export default function Blogs() {
   return (
