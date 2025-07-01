@@ -1,0 +1,35 @@
+.blogContent {
+}
+
+.blogContent h2 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  border-left: 5px solid gray;
+  padding: 5px 0px 5px 10px;
+  background-color: rgba(52, 52, 52, 0.3);
+  margin-bottom: 10px;
+}
+
+.blogContent p {
+  color: var(--color-red-100);
+}
+
+.blogContent ol {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+.blogContent li {
+  position: relative;
+}
+
+.blogContent li::before {
+  content: "•";
+  color: #f1f1f1;
+  font: 1.5rem;
+  position: relative;
+  left: -20px;
+}
+
+.blogContent img {
+  border-radius: 10px;
+}

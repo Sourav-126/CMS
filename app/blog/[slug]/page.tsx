@@ -1,67 +1,77 @@
 import { DateFormat } from "@/utils/dateFormat";
 import { Calendar } from "lucide-react";
 import Image from "next/image";
+import "../../styles/blog.css";
 
-export default function SingleBlog() {
-  const tempTags = "Reading Books , Depression, Boring ,get a life";
-  const tempHtml = "<p> Content</p>";
+const fetchSingleBlog = async (slug: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_NEXT_URL}/api/v1/get/${slug}`
+  );
+  const data = await res.json();
+  return data;
+};
+
+export async function generateMetadata({ params }) {
+  const param = await params;
+  const res = await fetchSingleBlog(param.slug);
+
+  return {
+    title: res.title,
+    description: res.excerpt,
+    openGraph: {
+      images: [res.thumbnail],
+    },
+  };
+}
+
+export default async function SingleBlog({ params }) {
+  const { slug } = await params;
+  const post = await fetchSingleBlog(slug);
+
   return (
     <section>
       <div className="flex items-center flex-col gap-4">
-        <Image
-          className="rounded border w-[90%] md:w-[600px]"
-          src="/images.jpeg"
-          width={500}
-          height={250}
-          alt="Page title"
-        />
+        {post.thumbnail && (
+          <Image
+            className="rounded border w-[90%] md:w-[350px]"
+            src={post.thumbnail}
+            width={200}
+            height={50}
+            alt="Page title"
+          />
+        )}
+        <h1 className="text-2xl md:text-5xl font-bold">{post.title}</h1>
         <div className="meta-of-a-blog space-y-2">
           <div className="flex gap-2 items-center">
             <Calendar className="text-gray-400 size-4" />
             <p className="text-gray-400 text-xs">
-              Created On :{DateFormat(new Date())}
+              Created On: {DateFormat(post.createdAt)}
             </p>
           </div>
           <div className="text-xs flex items-center gap-2">
-            <p>Category :</p>
+            <p>Category:</p>
             <p className="badge border border-gray-700 w-fit px-2 py-1 rounded bg-gray-600/30">
-              Depress!
+              {post.catSlug}
             </p>
           </div>
-          <div className="text-xs flex items-center gap-2">
-            <p>Tags :</p>
-            {tempTags.split(",").map((tag) => (
-              <p className="badge border border-gray-700 w-fit px-2 py-1 rounded bg-gray-600/30">
-                {tag}
-              </p>
-            ))}
-          </div>
+          {post?.keywords && (
+            <div className="text-xs flex items-center gap-2">
+              <p>Tags:</p>
+              {post.keywords.split(",").map((tag, index) => (
+                <p
+                  key={index}
+                  className="badge border border-gray-700 w-fit px-2 py-1 rounded bg-gray-600/30"
+                >
+                  {tag}
+                </p>
+              ))}
+            </div>
+          )}
         </div>
-        <div className="content text-sm w-[90%] md:w-2/3  text-gray-300 ">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odit
-          laboriosam ipsam suscipit modi repudiandae, saepe ducimus reiciendis
-          laudantium consequuntur placeat, ea voluptatibus dignissimos dolore.
-          Excepturi ex, vel architecto totam quo error natus reiciendis magnam
-          praesentium vero illo iusto quam, iste sunt atque voluptas delectus
-          maxime quaerat corporis deleniti.
-          <br /> Reiciendis natus ipsam impedit? Id hic illo voluptatibus?
-          Corrupti unde ipsam eum hic, praesentium quis laudantium voluptatibus
-          porro ab fugit quas qui dolorem beatae ut, nesciunt eos delectus, modi
-          sit ducimus iusto earum nobis neque quo cumque? Tempora nulla sequi,
-          ullam reprehenderit, earum odio, est animi quis
-          <br /> distinctio voluptatibus vel! Unde dolor consequatur eligendi
-          architecto repudiandae nihil, nam distinctio rem quibusdam, natus
-          omnis aliquid recusandae? Placeat ad quis id culpa, neque accusantium
-          labore error ducimus quidem odio facilis exercitationem explicabo
-          voluptatem iste. Ut rerum facere ad ea cum fugit <br />
-          quaerat ipsa, numquam placeat eos in voluptatum doloremque. Nam
-          aspernatur tempora animi quas esse et reiciendis odit officiis est in
-          numquam explicabo non, quidem nostrum vero a voluptates architecto{" "}
-          <br /> velit quos? Ad unde excepturi explicabo corporis. Libero
-          corporis fuga eaque velit eveniet temporibus reiciendis est officiis
-          architecto quo totam aut obcaecati perferendis expedita error earum
-          iusto necessitatibus, rem numquam dicta fugiat esse in.
-        </div>
+        <div
+          className="blogContent text-sm w-[90%] md:w-2/3 text-gray-300"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
       </div>
     </section>
   );

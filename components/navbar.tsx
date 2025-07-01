@@ -16,7 +16,7 @@ import SignOut from "./signOut";
 export default async function Navbar() {
   const session = await getAuthSession();
   return (
-    <div className="w-full flex justify-between px-8 h-[12px]">
+    <div className="w-full flex justify-between items-center px-8 h-[12px]">
       <Link href={"/"} className="flex gap-2">
         <Feather />
         <span className="font-extrabold">Ink & Insights</span>
@@ -33,13 +33,13 @@ export default async function Navbar() {
 const UserModalComponent = ({ user }: { user: User }) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="outline-none">
         <Image
           className="rounded-full border-2 border-[greenyellow]"
           alt="userImage"
           src={user.image}
-          width={40}
-          height={40}
+          width={30}
+          height={30}
         />{" "}
       </DropdownMenuTrigger>
       <DropdownMenuContent>

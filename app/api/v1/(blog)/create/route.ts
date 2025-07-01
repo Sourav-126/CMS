@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     MetaDescription,
     category,
     content,
-    excerpt,
+    excerpts,
     keywords,
     status,
     slug,
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     MetaDescription: string;
     category: string;
     content: string;
-    excerpt: string;
+    excerpts: string;
     keywords: string;
     status: string;
     slug: string;
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
         thumbnail: ogImage || null,
         desc: MetaDescription,
         keywords: keywords || null,
-        excerpt: excerpt || null,
+        excerpt: excerpts || null,
         authorId: (session.user as SessionUser).id,
         catSlug: categoryCheck.slug,
         Status: statusOfPost,

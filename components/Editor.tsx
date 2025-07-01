@@ -14,7 +14,6 @@ export default function Editor({ onSave }) {
   const handleForm = (data) => {
     const generatedSlug = slugify(data.title);
     onSave({ ...data, slug: generatedSlug, ogImage, content });
-    console.log(data);
   };
   return (
     <section>
@@ -52,7 +51,6 @@ export default function Editor({ onSave }) {
             "strike",
             "blockquote",
             "list",
-            "bullet",
             "indent",
             "link",
             "image",
