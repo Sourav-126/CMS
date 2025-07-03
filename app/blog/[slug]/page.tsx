@@ -5,7 +5,8 @@ import "../../styles/blog.css";
 
 const fetchSingleBlog = async (slug: string) => {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_NEXT_URL}/api/v1/get/${slug}`
+    `${process.env.NEXT_PUBLIC_NEXT_URL}/api/v1/get/${slug}`,
+    { next: { tags: ["slug"] } }
   );
   const data = await res.json();
   return data;

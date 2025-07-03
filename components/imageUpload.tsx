@@ -2,7 +2,9 @@ import { useState } from "react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { put } from "@vercel/blob";
 import { uploadToBlob } from "@/utils/uploadToBlob";
-export default function ImageUpload({ returnImage }) {
+import { preload } from "react-dom";
+import Image from "next/image";
+export default function ImageUpload({ returnImage, preloadedImage }) {
   const [imageAsFile, setImageAsFile] = useState();
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
@@ -17,6 +19,26 @@ export default function ImageUpload({ returnImage }) {
       console.log("error happens while uploading the image");
     }
   };
+
+  if (preloadedImage) {
+    return (
+      <div>
+        <label className="w-fit">
+          <span className="bg-gray-500/10 border-2 p-3 rounded-lg border-gray-500 border-dashed cursor-pointer">
+            Update Cover Image
+          </span>
+          <input type="file" onChange={handleImageFile} hidden />
+        </label>
+        <Image
+          className="border border-gray-400 rounded-md "
+          src={preloadedImage}
+          alt="upload Image"
+          width={200}
+          height={150}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="py-2 flex flex-col  gap-2 w-full">

@@ -6,3 +6,7 @@ export interface SessionUser {
   username: string;
   role?: string;
 }
+
+export interface Session {
+  user: SessionUser;
+}
