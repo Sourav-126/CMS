@@ -17,7 +17,7 @@ export async function PUT(
       title,
       ogImage,
       content,
-      excerpts,
+      excerpt,
       status,
       MetaDescription,
       keywords,
@@ -64,7 +64,7 @@ export async function PUT(
         thumbnail: ogImage || null,
         desc: MetaDescription,
         keywords: keywords || null,
-        excerpt: excerpts || null,
+        excerpt: excerpt|| null,
         Status: status,
       },
     });

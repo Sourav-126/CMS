@@ -2,12 +2,16 @@ import { DateFormat } from "@/utils/dateFormat";
 import { Calendar } from "lucide-react";
 import Image from "next/image";
 import "../../styles/blog.css";
+import { notFound } from "next/navigation";
 
 const fetchSingleBlog = async (slug: string) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_NEXT_URL}/api/v1/get/${slug}`,
     { next: { tags: ["slug"] } }
   );
+  if (res.status === 404) {
+    notFound();
+  }
   const data = await res.json();
   return data;
 };

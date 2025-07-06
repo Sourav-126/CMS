@@ -5,9 +5,32 @@ import { useForm } from "react-hook-form";
 import "react-quill-new/dist/quill.snow.css";
 import { slugify } from "slugmaster";
 import ImageUpload from "./imageUpload";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { z } from "zod";
+import { ErrorBoundaryHandler } from "next/dist/client/components/error-boundary";
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
+const schema = z.object({
+  title: z
+    .string()
+    .min(10, { message: "title should be more than 10 or more characters" })
+    .min(1, { message: "title must not be empty" }),
+
+  excerpt: z.string().min(10, { message: "Please add some excerpts" }),
+  category: z.string().min(1, { message: "Please add a category" }),
+  keywords: z.string().min(1, { message: "Please add some keywords" }),
+  status: z.enum(["DRAFT", "PUBLISHED"]),
+  MetaDescription: z
+    .string()
+    .min(10, {
+      message: "Please add a meta description",
+    })
+    .optional(),
+});
+
 export default function Editor({ onSave, initialData }) {
+  const router = useRouter();
   const { register, handleSubmit, setValue } = useForm();
   const [content, setContent] = useState("");
   const [ogImage, setOgImage] = useState("");
@@ -17,7 +40,7 @@ export default function Editor({ onSave, initialData }) {
       setValue("title", initialData.title);
       setContent(initialData.content);
 
-      setValue("excerpts", initialData.excerpt || "");
+      setValue("excerpt", initialData.excerpt || "");
       setOgImage(initialData.thumbnail);
 
       setValue("keywords", initialData.keywords || "");
@@ -30,12 +53,41 @@ export default function Editor({ onSave, initialData }) {
     }
   }, [initialData]);
   const handleForm = (data) => {
-    const generatedSlug = slugify(data.title);
-    onSave({ ...data, slug: generatedSlug, ogImage, content });
+    try {
+      const generatedSlug = initialData
+        ? initialData.slug
+        : slugify(data.title);
+      onSave({ ...data, slug: generatedSlug, ogImage, content });
+      toast.success(
+        initialData
+          ? "Post Updated Successfully"
+          : "Your Blog is created successfully"
+      );
+      if (data.status === "PUBLISHED") {
+        router.push(`/blog/${generatedSlug}`);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
   };
   return (
     <section>
-      <form className="space-y-4" onSubmit={handleSubmit(handleForm)}>
+      <form
+        className="space-y-4"
+        onSubmit={handleSubmit(async (data) => {
+          try {
+            await schema.parseAsync(data);
+            await handleForm(data);
+          } catch (error) {
+            console.error(error);
+            if (error instanceof z.ZodError) {
+              error.errors.forEach((err) => {
+                toast.error(err.message);
+              });
+            }
+          }
+        })}
+      >
         <input
           {...register("title")}
           placeholder="Enter the post title"
@@ -76,7 +128,7 @@ export default function Editor({ onSave, initialData }) {
         />
 
         <input
-          {...register("excerpts")}
+          {...register("excerpt")}
           placeholder="Enter Excerpts"
           className="font-bold text-xl bg-zinc-600 px-3 py-2 rounded-sm outline-none  w-full"
           type="text"

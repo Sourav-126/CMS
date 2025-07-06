@@ -9,7 +9,7 @@ type PostType = {
   MetaDescription: string;
   category: string;
   content: string;
-  excerpts: string;
+  excerpt: string;
   keywords: string;
   status: string;
 };

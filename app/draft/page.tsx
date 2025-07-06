@@ -8,7 +8,7 @@ export default async function Draft() {
     MetaDescription,
     category,
     content,
-    excerpts,
+    excerpt,
     keywords,
     status,
     slug,
@@ -19,7 +19,7 @@ export default async function Draft() {
     MetaDescription: string;
     category: string;
     content: string;
-    excerpts: string;
+    excerpt: string;
     keywords: string;
     status: string;
     slug: string;
@@ -36,7 +36,7 @@ export default async function Draft() {
           MetaDescription,
           category,
           content,
-          excerpts,
+          excerpt,
           keywords,
           status,
           slug,
