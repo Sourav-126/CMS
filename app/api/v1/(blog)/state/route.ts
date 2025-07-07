@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import isAdmin from "@/utils/isAdmin";
-import { SessionUser } from "@/app/types";
+import { Session, SessionUser } from "@/app/types";
 
 export async function PATCH(request: Request) {
   const { id, status } = await request.json();
@@ -12,7 +12,7 @@ export async function PATCH(request: Request) {
   }
 
   const session = await getServerSession(authOptions);
-  const adminCheck = await isAdmin(session);
+  const adminCheck = await isAdmin(session as unknown as Session);
 
   const grabPost = await prisma.post.findUnique({
     where: {

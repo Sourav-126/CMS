@@ -1,13 +1,28 @@
 import { getSingleUser } from "@/app/actions/getSingleUser";
+import { Post, User } from "@/app/types";
 import { DateFormat } from "@/utils/dateFormat";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function SingleUser({ params }) {
+interface UserWithPosts extends User {
+  Post: Post[];
+}
+
+export default async function SingleUser({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
-  const user = await getSingleUser(id);
-  if (!user) notFound();
+  const result = await getSingleUser(id);
+
+  if (!result || "error" in result) {
+    notFound();
+  }
+
+  const user = result as UserWithPosts;
+
   return (
     <>
       <UserProfile user={user} />
@@ -16,15 +31,15 @@ export default async function SingleUser({ params }) {
   );
 }
 
-const UserProfile = ({ user }) => {
+const UserProfile = ({ user }: { user: User }) => {
   return (
     <div className="text-center flex flex-col items-center">
       <Image
         className="rounded-full border-2 border-[greenyellow]"
-        src={user.image}
+        src={user.image!}
         width={80}
         height={80}
-        alt={user.name}
+        alt={user.name!}
       />
       <h1 className="text-xl font-bold">{user.name}</h1>
       <p className="text-gray-300">@{user.username}</p>
@@ -35,7 +50,7 @@ const UserProfile = ({ user }) => {
   );
 };
 
-const UserPosts = ({ posts }) => {
+const UserPosts = ({ posts }: { posts: Post[] }) => {
   return (
     <div className="flex flex-col gap-4 w-10/12 pt-10 mx-auto">
       <h3 className="text-xl font-bold ">User posts</h3>
@@ -45,6 +60,7 @@ const UserPosts = ({ posts }) => {
         posts.map((post, index) => {
           return (
             <Link
+              key={post.id || index}
               className="flex items-center gap-5 bg-zinc-800/40 hover:bg-zinc-800/20 transition-all duration-200 hover:scale-[1.03] rounded px-2 py-2 w-full mx-auto"
               href={`/blog/${post.slug}`}
             >
@@ -60,7 +76,7 @@ const UserPosts = ({ posts }) => {
                   {post.title}
                 </h3>
                 <p className="text-gray-400">
-                  {post.excerpt.substring(0, 30)}...
+                  {post.excerpt?.substring(0, 30)}...
                 </p>
               </div>
             </Link>

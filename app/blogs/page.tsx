@@ -12,7 +12,7 @@ export default async function Blogs() {
   const blogData = await fetchAllBlogs();
   return (
     <section className="grid grid-cols-3  gap-4 md:grid-cols-5 p-8">
-      {blogData.map((blog, index) => {
+      {blogData.map((blog: any, index: number) => {
         return (
           <BlogCard
             key={index}

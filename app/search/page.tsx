@@ -1,14 +1,24 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+interface PostWithAuthor {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  author: {
+    name: string;
+    image: string;
+  };
+}
+
 export default function SearchPage() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<PostWithAuthor[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -27,11 +37,11 @@ export default function SearchPage() {
       } else {
         setError("");
       }
-      const foundPost = await res.json();
+      const foundPost: PostWithAuthor[] = await res.json();
 
       setResults(foundPost);
-    } catch (error) {
-      console.error(error.message);
+    } catch {
+      console.log("no Post found in search page");
     } finally {
       setLoading(false);
     }
@@ -41,6 +51,10 @@ export default function SearchPage() {
     if (query) {
       const timer = setTimeout(() => fetchPosts(), 500);
       return () => clearTimeout(timer);
+    } else {
+      // Clear results when query is empty
+      setResults([]);
+      setError("");
     }
   }, [query]);
 
@@ -61,10 +75,10 @@ export default function SearchPage() {
             results.map((post) => {
               return (
                 <li
-                  key={post?.id || post?.title}
+                  key={post.id}
                   className="bg-gray-500/10 p-3 rounded hover:scale-[1.01] transition-all duration-200"
                 >
-                  <Link href={`/blog/${post?.slug}`}>
+                  <Link href={`/blog/${post.slug}`}>
                     <h3 className="text-gray-100 text-lg font-bold">
                       {post.title}
                     </h3>

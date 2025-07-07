@@ -32,7 +32,7 @@ export async function PUT(
       );
     }
 
-    const Admin = await isAdmin(session);
+    const Admin = await isAdmin(session as unknown as Session);
 
     const post = await prisma.post.findUnique({
       where: {
@@ -64,7 +64,7 @@ export async function PUT(
         thumbnail: ogImage || null,
         desc: MetaDescription,
         keywords: keywords || null,
-        excerpt: excerpt|| null,
+        excerpt: excerpt || null,
         Status: status,
       },
     });
@@ -101,7 +101,7 @@ export async function GET(
       );
     }
 
-    const admin = await isAdmin(session);
+    const admin = await isAdmin(session as unknown as Session);
 
     const post = await prisma.post.findUnique({
       where: {

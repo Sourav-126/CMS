@@ -69,7 +69,7 @@ export async function POST(request: Request) {
         excerpt: excerpt || null,
         authorId: (session.user as SessionUser).id,
         catSlug: categoryCheck.slug,
-        Status: statusOfPost,
+        Status: statusOfPost as "DRAFT" | "PUBLISHED",
       },
     });
     return NextResponse.json(post, { status: 201 });

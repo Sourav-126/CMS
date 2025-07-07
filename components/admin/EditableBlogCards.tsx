@@ -5,8 +5,9 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Post } from "@/app/types";
 
-export default function EditableBlogCards({ post }) {
+export default function EditableBlogCards({ post }: { post: Post }) {
   const handleDelete = async (id: string) => {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_NEXT_URL}/api/v1/delete/${post.id}`,
@@ -60,10 +61,10 @@ export default function EditableBlogCards({ post }) {
         <div>
           <h2 className="font-bold text-lg">{post.title}</h2>
           <p className="text-sm text-gray-300">
-            {post.excerpt.substring(0, 15)}...
+            {post.excerpt?.substring(0, 15)}...
           </p>
           <span className="text-xs texy-gray-400">
-            {DateFormat(post.createdAt)}
+            {DateFormat(post.createdAt!)}
           </span>
         </div>
         <div className="flex gap-2 items-center space-x-2">

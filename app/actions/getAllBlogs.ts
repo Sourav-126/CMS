@@ -77,12 +77,15 @@ export async function getUserBlogs({
     },
   };
 
-  const [posts, count] = await prisma.$transaction([
-    prisma.post.findMany(query),
-    prisma.post.count({
-      where: queryBase,
-    }),
-  ]);
-
-  return { posts, count };
+  try {
+    const [posts, count] = await prisma.$transaction([
+      prisma.post.findMany(query),
+      prisma.post.count({
+        where: queryBase,
+      }),
+    ]);
+    return { posts, count };
+  } catch {
+    console.log("can't fetch post");
+  }
 }

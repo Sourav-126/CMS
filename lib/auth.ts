@@ -3,7 +3,33 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import { JWT } from "next-auth/jwt";
 import { AuthOptions, getServerSession, Session, User } from "next-auth";
 import { prisma } from "./prisma";
-import { SessionUser } from "@/app/types";
+
+import { DefaultSession } from "next-auth";
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      username: string;
+      role: string;
+    } & DefaultSession["user"];
+  }
+
+  interface User {
+    id: string;
+    username?: string;
+    role?: string;
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id: string;
+    username: string;
+    role: string;
+  }
+}
+
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
@@ -40,7 +66,7 @@ export const authOptions: AuthOptions = {
           token.email = dbUser.email;
           token.image = dbUser.image;
           token.username = dbUser.username;
-          token.role = dbUser.role;
+          token.role = dbUser.role as string;
         } else {
           const newUser = await prisma.user.create({
             data: {
@@ -51,16 +77,18 @@ export const authOptions: AuthOptions = {
             },
           });
           token.id = newUser.id;
+          token.name = newUser.name;
+          token.email = newUser.email;
+          token.image = newUser.image;
+          token.username = newUser.username;
+          token.role = newUser.role as string;
         }
       }
       return token;
     },
     async session({ session, token }: { session: Session; token: JWT }) {
       if (token && session.user) {
-        (session.user as SessionUser).id = token.id;
-        session.user.name = token.name;
-        session.user.image = token.image;
-        session.user.email = token.email;
+        session.user.id = token.id;
         session.user.username = token.username;
         session.user.role = token.role;
       }

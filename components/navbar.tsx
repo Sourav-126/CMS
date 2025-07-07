@@ -22,7 +22,7 @@ export default async function Navbar() {
         <span className="font-extrabold">Ink & Insights</span>
       </Link>
       {session ? (
-        <UserModalComponent user={session?.user} />
+        <UserModalComponent user={session?.user as unknown as User} />
       ) : (
         <Link href={"/sign-in"}>Sign in</Link>
       )}
@@ -37,7 +37,7 @@ const UserModalComponent = ({ user }: { user: User }) => {
         <Image
           className="rounded-full border-2 border-[greenyellow]"
           alt="userImage"
-          src={user.image}
+          src={user?.image!}
           width={30}
           height={30}
         />{" "}
@@ -46,7 +46,7 @@ const UserModalComponent = ({ user }: { user: User }) => {
         <DropdownMenuLabel>Hi, {user.name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Link href={`/profile/${user.name}`}>Go to Profile</Link>
+          <Link href={`/users/${user.id}`}>Go to Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem>
           <SignOut />

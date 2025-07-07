@@ -17,7 +17,11 @@ const fetchSingleBlog = async (slug: string) => {
   return data;
 };
 
-export async function generateMetadata({ params }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const param = await params;
   const res = await fetchSingleBlog(param.slug);
 
@@ -30,7 +34,11 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function SingleBlog({ params }) {
+export default async function SingleBlog({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
   const post = await fetchSingleBlog(slug);
 
@@ -78,7 +86,7 @@ export default async function SingleBlog({ params }) {
           {post?.keywords && (
             <div className="text-xs flex items-center gap-2">
               <p>Tags:</p>
-              {post.keywords.split(",").map((tag, index) => (
+              {post.keywords.split(",").map((tag: string, index: number) => (
                 <p
                   key={index}
                   className="badge border border-gray-700 w-fit px-2 py-1 rounded bg-gray-600/30"

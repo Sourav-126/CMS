@@ -57,6 +57,7 @@ export default function Editor({ onSave, initialData }: EditorProps) {
   const [selectionExist, setSelectionExist] = useState(false);
   const closeDialogBtnRef = useRef<HTMLButtonElement | null>(null);
   const quillRef = useRef<any>(null);
+
   useEffect(() => {
     if (initialData) {
       setValue("title", initialData.title);
@@ -76,7 +77,7 @@ export default function Editor({ onSave, initialData }: EditorProps) {
   }, [initialData]);
 
   const handleRepharse = async () => {
-    const selection = quillRef.current.getEditor().getSelection();
+    const selection = quillRef.current?.getEditor().getSelection();
     if (selection && selection.length > 0) {
       try {
         const selectedText = quillRef.current
@@ -115,6 +116,7 @@ export default function Editor({ onSave, initialData }: EditorProps) {
       console.log("no generation");
     }
   };
+
   const handleForm = (data: any) => {
     try {
       const generatedSlug = initialData
@@ -142,6 +144,7 @@ export default function Editor({ onSave, initialData }: EditorProps) {
       setSelectionExist(selection && selection.length > 0);
     }
   };
+
   return (
     <section>
       <form
@@ -168,13 +171,12 @@ export default function Editor({ onSave, initialData }: EditorProps) {
         ></input>
 
         <ReactQuill
+          //@ts-ignore
+          ref={quillRef}
           theme="snow"
           value={content}
           onChange={setContent}
           onChangeSelection={handleSelectionChange}
-          ref={(el: any) => {
-            quillRef.current = el;
-          }}
           modules={{
             toolbar: [
               [{ header: [1, 2, false] }],

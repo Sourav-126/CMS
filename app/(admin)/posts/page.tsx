@@ -1,22 +1,26 @@
-import { SessionUser } from "@/app/types";
+import { Session, SessionUser } from "@/app/types";
 import { AdminAllPosts } from "@/components/admin/AdminAllPosts";
 import { UserAllPosts } from "@/components/admin/UserAllPosts";
 import { authOptions } from "@/lib/auth";
 import isAdmin from "@/utils/isAdmin";
 import { getServerSession } from "next-auth";
 
-export default async function AllPosts({ searchParams }) {
+export default async function AllPosts({
+  searchParams,
+}: {
+  searchParams: Promise<{ page: number; category: string | null }>;
+}) {
   const searchParam = await searchParams;
   const page = searchParam.page || 1;
   const category = searchParam.category || null;
   const session = await getServerSession(authOptions);
 
-  const adminCheck = await isAdmin(session);
+  const adminCheck = await isAdmin(session as unknown as  Session);
   if (!adminCheck) {
     return (
       <UserAllPosts
         page={page}
-        category={category}
+        category={category as string}
         userId={(session?.user as SessionUser).id}
       />
     );
@@ -24,7 +28,7 @@ export default async function AllPosts({ searchParams }) {
 
   return (
     <div>
-      <AdminAllPosts page={page} category={category} />
+      <AdminAllPosts page={page} category={category as string} />
     </div>
   );
 }

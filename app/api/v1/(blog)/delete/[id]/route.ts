@@ -1,4 +1,4 @@
-import { SessionUser } from "@/app/types";
+import { Session, SessionUser } from "@/app/types";
 import { authOptions } from "@/lib/auth";
 import isAdmin from "@/utils/isAdmin";
 import { getServerSession } from "next-auth";
@@ -6,11 +6,14 @@ import { unauthorized } from "next/navigation";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-export async function DELETE(request: Request, { params }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
   const { id } = await params;
 
   const session = await getServerSession(authOptions);
-  const adminCheck = await isAdmin(session);
+  const adminCheck = await isAdmin(session as unknown as Session);
 
   if (!session?.user && !adminCheck) {
     return NextResponse.json({ message: "unAuthorized" }, { status: 401 });
