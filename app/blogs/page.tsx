@@ -1,6 +1,6 @@
-import { url } from "inspector";
 import Image from "next/image";
 import Link from "next/link";
+import { Post } from "../types";
 
 const fetchAllBlogs = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_NEXT_URL}/api/v1/get`);
@@ -12,14 +12,14 @@ export default async function Blogs() {
   const blogData = await fetchAllBlogs();
   return (
     <section className="grid grid-cols-3  gap-4 md:grid-cols-5 p-8">
-      {blogData.map((blog: any, index: number) => {
+      {blogData.map((blog: Post, index: number) => {
         return (
           <BlogCard
             key={index}
             title={blog.title}
-            thumbnail={blog.thumbnail}
-            excerpt={blog.excerpt}
-            url={blog.slug}
+            thumbnail={blog.thumbnail!}
+            excerpt={blog.excerpt!}
+            url={blog.slug!}
           />
         );
       })}

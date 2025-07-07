@@ -1,8 +1,5 @@
 import { useState } from "react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { put } from "@vercel/blob";
 import { uploadToBlob } from "@/utils/uploadToBlob";
-import { preload } from "react-dom";
 import Image from "next/image";
 export default function ImageUpload({ returnImage, preloadedImage }) {
   const [imageAsFile, setImageAsFile] = useState();

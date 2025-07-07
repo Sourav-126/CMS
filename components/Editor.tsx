@@ -8,7 +8,6 @@ import ImageUpload from "./imageUpload";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
-import { ErrorBoundaryHandler } from "next/dist/client/components/error-boundary";
 import { Button } from "./ui/button";
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 import {
@@ -23,7 +22,9 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "./ui/textarea";
 import AIContent from "@/utils/AIContent";
-import { Sparkle, Sparkles } from "lucide-react";
+import { Sparkles } from "lucide-react";
+import { Post } from "@/app/types";
+import ReactQuill from "react-quill-new";
 
 const schema = z.object({
   title: z
@@ -44,8 +45,8 @@ const schema = z.object({
 });
 
 interface EditorProps {
-  onSave: (data: any) => void;
-  initialData?: any;
+  onSave: (data: Post) => void;
+  initialData?: Post;
 }
 
 export default function Editor({ onSave, initialData }: EditorProps) {
@@ -56,7 +57,7 @@ export default function Editor({ onSave, initialData }: EditorProps) {
   const ideaRef = useRef<HTMLTextAreaElement | null>(null);
   const [selectionExist, setSelectionExist] = useState(false);
   const closeDialogBtnRef = useRef<HTMLButtonElement | null>(null);
-  const quillRef = useRef<any>(null);
+  const quillRef = useRef<ReactQuill>(null);
 
   useEffect(() => {
     if (initialData) {
@@ -64,7 +65,7 @@ export default function Editor({ onSave, initialData }: EditorProps) {
       setContent(initialData.content);
 
       setValue("excerpt", initialData.excerpt || "");
-      setOgImage(initialData.thumbnail);
+      setOgImage(initialData.thumbnail!);
 
       setValue("keywords", initialData.keywords || "");
 
@@ -72,7 +73,7 @@ export default function Editor({ onSave, initialData }: EditorProps) {
 
       setValue("MetaDescription", initialData.desc || "");
 
-      setValue("category", initialData.catSlug || "");
+      setValue("category", initialData.catSlug! || "");
     }
   }, [initialData]);
 
@@ -117,22 +118,22 @@ export default function Editor({ onSave, initialData }: EditorProps) {
     }
   };
 
-  const handleForm = (data: any) => {
+  const handleForm = (data: Post) => {
     try {
       const generatedSlug = initialData
         ? initialData.slug
         : slugify(data.title);
-      onSave({ ...data, slug: generatedSlug, ogImage, content });
+      onSave({ ...data, slug: generatedSlug, thumbnail:ogImage, content });
       toast.success(
         initialData
           ? "Post Updated Successfully"
           : "Your Blog is created successfully"
       );
-      if (data.status === "PUBLISHED") {
+      if (data.Status === "PUBLISHED") {
         router.push(`/blog/${generatedSlug}`);
       }
-    } catch (error: any) {
-      console.error(error.message);
+    } catch {
+      console.log("error in handleform")
     } finally {
       if (closeDialogBtnRef.current) closeDialogBtnRef.current.click();
     }
@@ -141,7 +142,7 @@ export default function Editor({ onSave, initialData }: EditorProps) {
   const handleSelectionChange = () => {
     if (quillRef.current) {
       const selection = quillRef.current.getEditor().getSelection();
-      setSelectionExist(selection && selection.length > 0);
+      setSelectionExist(selection && selection.length > 0||false);
     }
   };
 
@@ -152,7 +153,7 @@ export default function Editor({ onSave, initialData }: EditorProps) {
         onSubmit={handleSubmit(async (data) => {
           try {
             await schema.parseAsync(data);
-            await handleForm(data);
+            await handleForm(data as Post);
           } catch (error) {
             console.error(error);
             if (error instanceof z.ZodError) {

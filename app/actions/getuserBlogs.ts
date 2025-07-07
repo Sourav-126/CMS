@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { config } from "@/app/config/config";
-import { Prisma } from "@prisma/client";
 
 export async function getAllBlogs({
   page,
@@ -17,7 +16,7 @@ export async function getAllBlogs({
   const validPage = Math.max(1, Number(page) || 1);
   const skipAmount = postsToShow * (validPage - 1);
 
-  let query = {
+  const query = {
     take: postsToShow,
     skip: skipAmount,
     where: {
@@ -67,7 +66,7 @@ export async function getUserBlogs({
   const validPage = Math.max(1, Number(page) || 1);
   const skipAmount = postsToShow * (validPage - 1);
 
-  let queryBase = {
+  const queryBase = {
     authorId: userId,
     ...(category && {
       catSlug: {

@@ -2,7 +2,6 @@ import { Session, SessionUser } from "@/app/types";
 import { authOptions } from "@/lib/auth";
 import isAdmin from "@/utils/isAdmin";
 import { getServerSession } from "next-auth";
-import { unauthorized } from "next/navigation";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 

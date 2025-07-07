@@ -1,5 +1,5 @@
 export const Icons = {
-  Google: (props: any) => {
+  Google: (props: React.SVGProps<SVGSVGElement>) => {
     return (
       <svg
         width={40}

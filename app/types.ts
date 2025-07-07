@@ -31,4 +31,6 @@ export interface Post {
   keywords?: string;
   Status?: string;
   createdAt: Date;
+  desc?: string;
+  catSlug?:string
 }
