@@ -1,6 +1,6 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import "react-quill-new/dist/quill.snow.css";
 import { slugify } from "slugmaster";
@@ -9,7 +9,21 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { ErrorBoundaryHandler } from "next/dist/client/components/error-boundary";
+import { Button } from "./ui/button";
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "./ui/textarea";
+import AIContent from "@/utils/AIContent";
+import { Sparkle, Sparkles } from "lucide-react";
 
 const schema = z.object({
   title: z
@@ -29,12 +43,20 @@ const schema = z.object({
     .optional(),
 });
 
-export default function Editor({ onSave, initialData }) {
+interface EditorProps {
+  onSave: (data: any) => void;
+  initialData?: any;
+}
+
+export default function Editor({ onSave, initialData }: EditorProps) {
   const router = useRouter();
   const { register, handleSubmit, setValue } = useForm();
   const [content, setContent] = useState("");
   const [ogImage, setOgImage] = useState("");
-
+  const ideaRef = useRef<HTMLTextAreaElement | null>(null);
+  const [selectionExist, setSelectionExist] = useState(false);
+  const closeDialogBtnRef = useRef<HTMLButtonElement | null>(null);
+  const quillRef = useRef<any>(null);
   useEffect(() => {
     if (initialData) {
       setValue("title", initialData.title);
@@ -52,7 +74,48 @@ export default function Editor({ onSave, initialData }) {
       setValue("category", initialData.catSlug || "");
     }
   }, [initialData]);
-  const handleForm = (data) => {
+
+  const handleRepharse = async () => {
+    const selection = quillRef.current.getEditor().getSelection();
+    if (selection && selection.length > 0) {
+      try {
+        const selectedText = quillRef.current
+          .getEditor()
+          .getText(selection.index, selection.length);
+
+        const response = await AIContent({
+          idea: selectedText,
+          customInstructions:
+            "Rewrite this content in a more engaging and interesting way",
+          contentGen: false,
+        });
+        quillRef.current
+          .getEditor()
+          .deleteText(selection.index, selection.length);
+        quillRef.current.getEditor().insertText(selection.index, response);
+        setSelectionExist(false);
+      } catch (error) {
+        console.error(error);
+        toast.error("Uh, Oh!, Something went wrong");
+      }
+    } else {
+      toast.error("No selection found");
+    }
+  };
+
+  const handleGenerateContentAI = async () => {
+    try {
+      const response = await AIContent({
+        idea: ideaRef.current?.value || "",
+        customInstructions: "Generate content with proper Facts",
+        contentGen: true,
+      });
+      setContent(response);
+    } catch {
+      console.log("no generation");
+    }
+  };
+  const handleForm = (data: any) => {
     try {
       const generatedSlug = initialData
         ? initialData.slug
@@ -66,8 +129,17 @@ export default function Editor({ onSave, initialData }) {
       if (data.status === "PUBLISHED") {
         router.push(`/blog/${generatedSlug}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error.message);
+    } finally {
+      if (closeDialogBtnRef.current) closeDialogBtnRef.current.click();
+    }
+  };
+
+  const handleSelectionChange = () => {
+    if (quillRef.current) {
+      const selection = quillRef.current.getEditor().getSelection();
+      setSelectionExist(selection && selection.length > 0);
     }
   };
   return (
@@ -99,6 +171,10 @@ export default function Editor({ onSave, initialData }) {
           theme="snow"
           value={content}
           onChange={setContent}
+          onChangeSelection={handleSelectionChange}
+          ref={(el: any) => {
+            quillRef.current = el;
+          }}
           modules={{
             toolbar: [
               [{ header: [1, 2, false] }],
@@ -126,6 +202,37 @@ export default function Editor({ onSave, initialData }) {
             "image",
           ]}
         />
+
+        <Dialog>
+          <DialogTrigger>
+            <Button variant="outline">
+              Generate content using AI <Sparkles />
+            </Button>
+          </DialogTrigger>
+
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle></DialogTitle>
+              <DialogDescription>
+                Give a brief about the content you want to generate
+              </DialogDescription>
+              <Textarea
+                ref={ideaRef}
+                placeholder="Enter the content you want to generate"
+              />
+            </DialogHeader>
+            <DialogFooter>
+              <Button onClick={handleGenerateContentAI} type="submit">
+                Generate Content
+              </Button>
+              <DialogClose asChild>
+                <Button ref={closeDialogBtnRef} variant="outline">
+                  Cancel
+                </Button>
+              </DialogClose>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         <input
           {...register("excerpt")}
@@ -169,6 +276,15 @@ export default function Editor({ onSave, initialData }) {
           </button>
         </div>
       </form>
+      {selectionExist && (
+        <Button
+          className="fixed bottom-10 cursor-pointer right-10"
+          variant="outline"
+          onClick={handleRepharse}
+        >
+          Rewrite using AI <Sparkles />
+        </Button>
+      )}
     </section>
   );
 }

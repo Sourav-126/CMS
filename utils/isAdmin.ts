@@ -1,6 +1,10 @@
 import { Session } from "@/app/types";
 
-const listOfAdmins = ["test@gmail.com", "souravarora285@gmail.com"];
+const listOfAdmins = [
+  "test@gmail.com",
+  "souravarora285@gmail.com",
+  "tuntuna0978@gmail.com",
+];
 
 export default async function isAdmin(session: Session) {
   if (!session) {

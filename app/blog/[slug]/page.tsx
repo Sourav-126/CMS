@@ -3,6 +3,7 @@ import { Calendar } from "lucide-react";
 import Image from "next/image";
 import "../../styles/blog.css";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 const fetchSingleBlog = async (slug: string) => {
   const res = await fetch(
@@ -47,11 +48,26 @@ export default async function SingleBlog({ params }) {
         )}
         <h1 className="text-2xl md:text-5xl font-bold">{post.title}</h1>
         <div className="meta-of-a-blog space-y-2">
-          <div className="flex gap-2 items-center">
-            <Calendar className="text-gray-400 size-4" />
-            <p className="text-gray-400 text-xs">
-              Created On: {DateFormat(post.createdAt)}
-            </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex gap-2 items-center">
+              <Calendar className="text-gray-400 size-4" />
+              <p className="text-gray-400 text-xs">
+                Created on: {DateFormat(post.createdAt)}
+              </p>
+            </div>
+            <Link
+              className="flex items-center gap-2"
+              href={`/user/${post.authorId}`}
+            >
+              <Image
+                className="rounded-full"
+                src={post.author.image}
+                width={20}
+                height={20}
+                alt="author"
+              />
+              <p className="text-xs text-gray-400">{post.author.name}</p>
+            </Link>
           </div>
           <div className="text-xs flex items-center gap-2">
             <p>Category:</p>
