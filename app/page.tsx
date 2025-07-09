@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Layers, Pencil, Zap } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Ink and Insights",
@@ -21,10 +22,16 @@ export default function Landing() {
             </p>
           </div>
           <div className="flex gap-3">
-            <Button variant={"default"} className="bg-gray-200">
+            <Link
+              href="/sign-in"
+              className="bg-gray-200 border-2 border-neutral-400 font-[450]
+ hover:bg-gray-300  transition-all duration-200 delay-100 text-gray-950 px-4 py-1 rounded-md"
+            >
               Get Started!
+            </Link>
+            <Button className="cursor-pointer" variant={"outline"}>
+              Learn More
             </Button>
-            <Button variant={"outline"}> Learn More</Button>
           </div>
         </div>
       </section>

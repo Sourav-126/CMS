@@ -19,10 +19,10 @@ export async function POST(request: Request) {
     keywords,
     status,
     slug,
-    thumbnail, // Changed from ogImage to thumbnail
+    thumbnail,
   }: {
     title: string;
-    thumbnail: string; // Changed from ogImage to thumbnail
+    thumbnail: string;
     MetaDescription: string;
     category: string;
     content: string;
@@ -31,8 +31,6 @@ export async function POST(request: Request) {
     status: string;
     slug: string;
   } = body;
-
-  console.log("Received thumbnail:", thumbnail); // Updated variable name
 
   if (
     !title ||
@@ -66,7 +64,7 @@ export async function POST(request: Request) {
         title,
         content,
         slug,
-        thumbnail: thumbnail, // Use the thumbnail variable
+        thumbnail: thumbnail,
         desc: MetaDescription,
         keywords: keywords,
         excerpt: excerpt,

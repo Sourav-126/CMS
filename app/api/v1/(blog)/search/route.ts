@@ -40,5 +40,3 @@ export async function GET(req: Request) {
 
   return NextResponse.json(posts, { status: 200 });
 }
-
-// /api/v1/search?query=blog

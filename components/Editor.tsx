@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { Button } from "./ui/button";
-import type ReactQuill from "react-quill-new"; //
+import type ReactQuill from "react-quill-new";
 
 type ReactQuillRef = ReactQuill;
 const ReactQuillComponent = dynamic(() => import("react-quill-new"), {
@@ -168,14 +168,12 @@ export default function Editor({
     }
   };
 
-  // Fix for the handleForm function
   const handleForm = async (data: FormData): Promise<void> => {
     try {
       const generatedSlug = initialData
         ? initialData.slug
         : slugify(data.title);
 
-      // Create the complete save data object
       const saveData = {
         ...data,
         slug: generatedSlug || "",
@@ -183,10 +181,8 @@ export default function Editor({
         content: content || "",
       };
 
-      // Log the data being sent to see if thumbnail is included
       console.log("Saving data with thumbnail:", saveData);
 
-      // Call onSave with the complete data
       await onSave(saveData);
 
       toast.success(
@@ -240,8 +236,6 @@ export default function Editor({
         />
 
         <ReactQuillComponent
-          //@ts-expect-error does not support ref or any ref component in new library!
-          ref={quillRef}
           theme="snow"
           value={content}
           onChange={setContent}

@@ -12,7 +12,6 @@ export async function getAllBlogs({
 }) {
   const postsToShow = config.POSTS_PER_PAGE;
 
-  // Ensure page is a valid number and at least 1
   const validPage = Math.max(1, Number(page) || 1);
   const skipAmount = postsToShow * (validPage - 1);
 
@@ -62,7 +61,6 @@ export async function getUserBlogs({
 }) {
   const postsToShow = config.POSTS_PER_PAGE;
 
-  // Ensure page is a valid number and at least 1
   const validPage = Math.max(1, Number(page) || 1);
   const skipAmount = postsToShow * (validPage - 1);
 
