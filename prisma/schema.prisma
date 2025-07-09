@@ -72,10 +72,10 @@ model Post {
   title     String
   slug      String     @unique
   content   String
-  thumbnail String?
+  thumbnail String
   desc      String? //description
-  keywords  String?
-  excerpt   String?
+  keywords  String
+  excerpt   String
   authorId  String
   catSlug   String
   author    User       @relation(fields: [authorId], references: [id])

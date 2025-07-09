@@ -1,18 +1,8 @@
 "use client";
+import { onSaveProps, Post } from "@/app/types";
 import Editor from "@/components/Editor";
 import { useEffect, useState, use } from "react";
 import { toast } from "sonner";
-
-type PostType = {
-  title: string;
-  ogImage: string;
-  MetaDescription: string;
-  category: string;
-  content: string;
-  excerpt: string;
-  keywords: string;
-  status: string;
-};
 
 interface EditDraftProps {
   params: Promise<{ slug: string }>;
@@ -21,7 +11,7 @@ interface EditDraftProps {
 export default function EditDraft({ params }: EditDraftProps) {
   const resolvedParams = use(params);
   const slug = resolvedParams?.slug;
-  const [post, setPost] = useState<PostType | null>(null);
+  const [post, setPost] = useState<Post | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -69,7 +59,7 @@ export default function EditDraft({ params }: EditDraftProps) {
     fetchPost();
   }, [slug]);
 
-  const savePost = async (updatedPost: PostType) => {
+  const savePost = async (updatedPost: onSaveProps) => {
     if (!slug) {
       throw new Error("No slug available");
     }
@@ -111,7 +101,7 @@ export default function EditDraft({ params }: EditDraftProps) {
   return (
     <div className="p-8">
       <h1 className="font-bold text-2xl pb-3">Edit Post</h1>
-      <Editor onSave={savePost} initialData={post} />
+      <Editor onSave={savePost} initialData={post as Post} />
     </div>
   );
 }

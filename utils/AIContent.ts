@@ -20,7 +20,7 @@ export default async function AIContent({
     basePrompt = `You are a senior content reviewer.
     Your task is to go through the content and rewrite in easy to understand language.
     The content that you need to repharse is as follows:${idea}
-    The content should be properly bulleted using numbers, headings.Below are some custom instructions for the content: ${customInstructions}
+    The content should be properly bulleted using numbers, headings.Below are some custom instructions for the content: ${customInstructions} and no need to give introduction of your role
     `;
   }
   try {
@@ -53,6 +53,7 @@ export default async function AIContent({
     );
 
     if (!response.ok) {
+      console.log(response);
       throw new Error("Failed to generate content");
     }
     const data = await response.json();

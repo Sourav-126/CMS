@@ -9,8 +9,8 @@ export async function middleware(request: Request) {
       return NextResponse.json("CORS not allowed", { status: 403 });
     }
     let ip = request.headers.get("x-forwarded-for") || "unknown";
-    const { limit, remaining, reset } = await rateLimit.limit(ip);
-    if (remaining) {
+    const { remaining } = await rateLimit.limit(ip);
+    if (!remaining) {
       return NextResponse.json(
         {
           message: "You have reached the Request limit",

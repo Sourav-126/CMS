@@ -1,10 +1,10 @@
 import { getAllBlogs } from "@/app/actions/getAllBlogs";
 
-import SingleBlog from "@/app/blog/[slug]/page";
 import EditableBlogCards from "./EditableBlogCards";
 import Pagination from "../pagination";
 import { config } from "@/app/config/config";
 import CategoryFilter from "../categoryFilter";
+import { Post } from "@/app/types";
 export const AdminAllPosts = async ({
   page,
   category,
@@ -16,11 +16,15 @@ export const AdminAllPosts = async ({
   if (!posts) {
     throw new Error("failed to get Posts");
   }
+
+  const validPosts = posts.filter(
+    (post) => post.Status === "DRAFT" || post.Status === "PUBLISHED"
+  ) as Post[];
   return (
     <section className="p-8 flex flex-col gap-4">
       <h2>Manage all the Blogs</h2>
       <CategoryFilter />
-      {posts.map((post) => {
+      {validPosts.map((post) => {
         return <EditableBlogCards key={post.id} post={post} />;
       })}
 

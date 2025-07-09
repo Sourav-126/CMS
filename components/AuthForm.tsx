@@ -35,7 +35,7 @@ export const AuthForm = ({ origin }: { origin: string }) => {
       </button>
       {origin === "sign-up" ? (
         <p className="text-sm text-center text-gray-200 py-2">
-          Don't have an account?{" "}
+          Don&apos;t have an account?
           <Link className="text-blue-500 underline" href="/sign-up">
             Sign up
           </Link>

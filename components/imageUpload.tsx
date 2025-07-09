@@ -1,16 +1,23 @@
 import { useState } from "react";
 import { uploadToBlob } from "@/utils/uploadToBlob";
 import Image from "next/image";
-export default function ImageUpload({ returnImage, preloadedImage }) {
-  const [imageAsFile, setImageAsFile] = useState();
-  const [loading, setLoading] = useState(false);
+export default function ImageUpload({
+  returnImage,
+  preloadedImage,
+}: {
+  returnImage: (url: string) => void;
+  preloadedImage: string;
+}) {
+  const [, setImageAsFile] = useState<File>();
+  const [loading] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
-  const handleImageFile = async (e) => {
-    const image = e.target.files[0];
-    setImageAsFile(image);
+  const handleImageFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const image = e.target?.files?.[0];
+    setImageAsFile(image!);
     if (image) {
       const { url } = await uploadToBlob(image);
       setImageUrl(url);
+      console.log(url);
       returnImage(url);
     } else {
       console.log("error happens while uploading the image");
@@ -50,7 +57,7 @@ export default function ImageUpload({ returnImage, preloadedImage }) {
         {imageUrl && (
           <div className="">
             <h3> Uploaded Successfully!</h3>
-            <img
+            <Image
               className="border border-gray-400 rounded-md "
               src={imageUrl}
               alt="upload Image"

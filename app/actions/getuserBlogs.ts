@@ -76,7 +76,7 @@ export async function getUserBlogs({
     }),
   };
 
-  let query = {
+  const query = {
     take: postsToShow,
     skip: skipAmount,
     where: queryBase,

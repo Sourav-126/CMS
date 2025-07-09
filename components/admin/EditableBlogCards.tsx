@@ -10,7 +10,7 @@ import { Post } from "@/app/types";
 export default function EditableBlogCards({ post }: { post: Post }) {
   const handleDelete = async (id: string) => {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_NEXT_URL}/api/v1/delete/${post.id}`,
+      `${process.env.NEXT_PUBLIC_NEXT_URL}/api/v1/delete/${id}`,
       {
         method: "DELETE",
         headers: {

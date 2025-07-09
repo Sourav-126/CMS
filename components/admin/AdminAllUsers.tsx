@@ -10,6 +10,7 @@ export default async function AdminAllUsers() {
       {users.map((user, index) => {
         return (
           <Link
+            key={index}
             href={`/users/${user.id}`}
             className="flex p-3 bg-gray-500/10  gap-3"
           >

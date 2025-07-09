@@ -15,7 +15,7 @@ export default function Pagination({
 }) {
   const router = useRouter();
   const totalPages = Math.ceil(totalItems / perPage);
-  const handlePageChange = (page:number) => {
+  const handlePageChange = (page: number) => {
     console.log(page, " page no");
     if (page < 1 || page > totalPages) return;
     router.push(`?page=${page}`);
@@ -36,6 +36,7 @@ export default function Pagination({
         {Array.from({ length: totalPages }, (_, index) => {
           return (
             <button
+              key={index}
               onClick={() => handlePageChange(index + 1)}
               className={`px-2 py-1 text-sm border rounded-md ${
                 currentPage == index + 1 ? "bg-gray-600/40 " : "bg-transparent"

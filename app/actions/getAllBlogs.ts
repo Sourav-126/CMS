@@ -48,7 +48,7 @@ export async function getUserBlogs({
   userId,
 }: {
   page: number;
-  category: string;
+  category?: string;
   userId: string;
 }) {
   const postsToShow = config.POSTS_PER_PAGE;
@@ -67,7 +67,7 @@ export async function getUserBlogs({
     }),
   };
 
-  let query = {
+  const query = {
     take: postsToShow,
     skip: skipAmount,
     where: queryBase,

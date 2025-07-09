@@ -22,37 +22,35 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const fetchPosts = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(
-        `${
-          process.env.NEXT_PUBLIC_NEXT_URL
-        }/api/v1/search?query=${encodeURIComponent(query)}`
-      );
-      if (!res.ok) {
-        if (res.status == 404) {
-          return setError("No post found");
-        }
-      } else {
-        setError("");
-      }
-      const foundPost: PostWithAuthor[] = await res.json();
-
-      setResults(foundPost);
-    } catch {
-      console.log("no Post found in search page");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(
+          `${
+            process.env.NEXT_PUBLIC_NEXT_URL
+          }/api/v1/search?query=${encodeURIComponent(query)}`
+        );
+        if (!res.ok) {
+          if (res.status == 404) {
+            return setError("No post found");
+          }
+        } else {
+          setError("");
+        }
+        const foundPost: PostWithAuthor[] = await res.json();
+
+        setResults(foundPost);
+      } catch {
+        console.log("no Post found in search page");
+      } finally {
+        setLoading(false);
+      }
+    };
     if (query) {
       const timer = setTimeout(() => fetchPosts(), 500);
       return () => clearTimeout(timer);
     } else {
-      // Clear results when query is empty
       setResults([]);
       setError("");
     }

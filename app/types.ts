@@ -29,8 +29,28 @@ export interface Post {
   content: string;
   excerpt?: string;
   keywords?: string;
-  Status?: string;
+  Status: "DRAFT" | "PUBLISHED";
   createdAt: Date;
   desc?: string;
-  catSlug?:string
+  catSlug?: string;
+  category?: string;
+  MetaDescription?: string;
+  userId: string | null;
+}
+
+export interface onSaveProps {
+  title: string;
+  MetaDescription: string | null;
+  category: string;
+  content: string;
+  excerpt: string;
+  keywords: string;
+  status: string;
+  slug: string;
+  id?: string;
+  authorId?: string;
+  createdAt?: Date;
+  thumbnail?: string;
+  updatedAt?: Date;
+  ogImage?: string;
 }

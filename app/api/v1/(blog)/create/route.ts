@@ -8,6 +8,7 @@ export async function POST(request: Request) {
   if (!session || !session.user) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 403 });
   }
+
   const body = await request.json();
   const {
     title,
@@ -18,10 +19,10 @@ export async function POST(request: Request) {
     keywords,
     status,
     slug,
-    ogImage,
+    thumbnail, // Changed from ogImage to thumbnail
   }: {
     title: string;
-    ogImage: string;
+    thumbnail: string; // Changed from ogImage to thumbnail
     MetaDescription: string;
     category: string;
     content: string;
@@ -30,6 +31,8 @@ export async function POST(request: Request) {
     status: string;
     slug: string;
   } = body;
+
+  console.log("Received thumbnail:", thumbnail); // Updated variable name
 
   if (
     !title ||
@@ -63,17 +66,18 @@ export async function POST(request: Request) {
         title,
         content,
         slug,
-        thumbnail: ogImage || null,
+        thumbnail: thumbnail, // Use the thumbnail variable
         desc: MetaDescription,
-        keywords: keywords || null,
-        excerpt: excerpt || null,
+        keywords: keywords,
+        excerpt: excerpt,
         authorId: (session.user as SessionUser).id,
         catSlug: categoryCheck.slug,
         Status: statusOfPost as "DRAFT" | "PUBLISHED",
       },
     });
     return NextResponse.json(post, { status: 201 });
-  } catch {
+  } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { message: "Could not Save the Post" },
       { status: 500 }

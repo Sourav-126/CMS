@@ -37,7 +37,7 @@ const UserModalComponent = ({ user }: { user: User }) => {
         <Image
           className="rounded-full border-2 border-[greenyellow]"
           alt="userImage"
-          src={user?.image!}
+          src={user.image!}
           width={30}
           height={30}
         />{" "}

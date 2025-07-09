@@ -15,11 +15,11 @@ export default function Draft() {
     keywords,
     status,
     slug,
-    ogImage,
+    thumbnail,
   }: {
     title: string;
-    ogImage: string;
-    MetaDescription: string;
+    thumbnail?: string;
+    MetaDescription: string | null;
     category: string;
     content: string;
     excerpt: string;
@@ -45,15 +45,15 @@ export default function Draft() {
             keywords,
             status,
             slug,
-            ogImage,
+            thumbnail,
           }),
         }
       );
-      const data = await res.json();
+
       if (!res.ok) {
+        console.log(res);
         throw new Error("Post Saving failed");
       }
-      // handle success if needed
     } finally {
       setLoading(false);
     }
