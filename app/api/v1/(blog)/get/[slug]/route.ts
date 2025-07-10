@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
+import { prisma } from "../../../../../../lib/prisma";
 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const post = await prisma?.post.findUnique({
+  const post = await prisma.post.findUnique({
     where: {
       slug,
       Status: "PUBLISHED",
